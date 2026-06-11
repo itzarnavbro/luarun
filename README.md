@@ -316,21 +316,17 @@ curl -X POST http://localhost:8080/api/run \
 
 ## Deployment
 
-### Local Docker
+### GitHub Pages (FREE ✅ - Best Option)
 
-```bash
-docker build -t luarun .
-docker run -p 8080:8080 luarun
-```
+The web dashboard UI is automatically deployed to GitHub Pages on every push to `main`.
 
-### GitHub Pages
+**Access:** `https://itzarnavbro.github.io/luarun/`
 
-The web dashboard UI is automatically deployed to GitHub Pages:
-- **URL:** `https://YOUR_USERNAME.github.io/luarun/`
-
-### Cloud Platforms
-
-Deploy to Heroku, Railway, DigitalOcean, or any Docker-compatible platform.
+- ✅ **Free forever**
+- ✅ Automatic on every push
+- ✅ No backend needed (static HTML)
+- ✅ Fast CDN
+- ⚠️ Dashboard is UI-only (requires separate backend for task execution)
 
 See [DEPLOY.md](DEPLOY.md) for detailed instructions.
 
@@ -343,6 +339,10 @@ GitHub Actions automatically:
 - ✅ Builds Docker images (to GitHub Container Registry)
 
 **Check status:** https://github.com/YOUR_USERNAME/luarun/actions
+
+**Free limits:**
+- 2,000 GitHub Actions minutes/month (free tier)
+- GitHub Container Registry: 500MB free storage
 
 ## License
 

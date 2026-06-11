@@ -2,26 +2,45 @@
 
 This guide covers deploying luarun to various platforms.
 
-## GitHub Pages (Static Dashboard Only)
+## Free Options
+
+### GitHub Pages (FREE ✅ - Recommended)
 
 The UI is automatically deployed to GitHub Pages on every push to `main`.
 
 **Access:** `https://YOUR_USERNAME.github.io/luarun`
 
-*Note: This hosts only the static HTML dashboard without the backend.*
+**Pros:**
+- ✅ Free forever
+- ✅ Automatic deployment
+- ✅ Fast CDN
+- ✅ No credit card required
 
-## Docker Deployment
+**Cons:**
+- Static HTML only (no backend execution)
+- Dashboard UI only (for demo/reference)
 
-### Build Image Locally
+### Docker Locally (FREE ✅)
+
+Build and run Docker image on your machine:
 
 ```bash
 docker build -t luarun .
 docker run -p 8080:8080 luarun
 ```
 
-Then visit: http://localhost:8080
+Then visit: http://localhost:8080 (full functionality)
 
-### GitHub Container Registry
+**Pros:**
+- ✅ Free
+- ✅ Full functionality
+- ✅ Complete control
+
+**Cons:**
+- Runs on your local machine
+- Requires Docker installed
+
+### GitHub Container Registry (FREE ✅ - Limited)
 
 Images are automatically built and pushed to GitHub Container Registry on every push to `main`.
 
@@ -30,26 +49,14 @@ docker pull ghcr.io/YOUR_USERNAME/luarun:main
 docker run -p 8080:8080 ghcr.io/YOUR_USERNAME/luarun:main
 ```
 
-## Cloud Deployments
+**Free limits:**
+- 500MB storage
+- Unlimited bandwidth
+- Requires personal GitHub account
 
-### Heroku
+## Paid/Freemium Options
 
-1. Install Heroku CLI: https://devcenter.heroku.com/articles/heroku-cli
-2. Create app:
-   ```bash
-   heroku create your-app-name
-   ```
-3. Add Procfile to repo:
-   ```
-   web: lua server.lua 0.0.0.0 $PORT
-   ```
-4. Deploy:
-   ```bash
-   git push heroku main
-   ```
-5. Access: `https://your-app-name.herokuapp.com`
-
-### Railway.app
+### Railway.app (Freemium)
 
 1. Sign up at https://railway.app
 2. Connect your GitHub repo
@@ -57,18 +64,54 @@ docker run -p 8080:8080 ghcr.io/YOUR_USERNAME/luarun:main
 4. Start command: `lua server.lua 0.0.0.0 8080`
 5. Deploy!
 
-### Replit
+**Pros:**
+- Good free tier ($5/month credits)
+- Easy GitHub integration
+- Great for small projects
+
+**Cons:**
+- Free tier limited
+- After credits expire, paid
+
+### Replit (Freemium)
 
 1. Import from GitHub at https://replit.com/github/YOUR_USERNAME/luarun
 2. Run: `lua server.lua 0.0.0.0 3000`
 3. Access via Replit's built-in web preview
 
-### DigitalOcean App Platform
+**Pros:**
+- Free tier available
+- Very easy setup
+- Built-in IDE
+
+**Cons:**
+- Projects sleep if inactive
+- Free tier limited resources
+- Slower than paid options
+
+### DigitalOcean (Paid - $5+/month)
 
 1. Connect GitHub repo at https://cloud.digitalocean.com/apps
 2. Set up Docker or direct deploy
 3. Configure port: 8080
 4. Deploy!
+
+**Pros:**
+- Reliable infrastructure
+- Good pricing
+
+**Cons:**
+- Minimum $5/month
+- No free tier
+
+## Quick Summary: Which Option to Choose?
+
+| Need | Best Choice | Cost |
+|------|-------------|------|
+| Demo/Portfolio | GitHub Pages | FREE |
+| Full local testing | Docker locally | FREE |
+| Cloud but free | Railway (limited) | FREE ($5 credits) |
+| Production | DigitalOcean/Railway | $5+/month |
 
 ## GitHub Actions Status
 
@@ -109,7 +152,7 @@ PORT=3000 lua server.lua
 - GitHub account with repo
 - Actions enabled
 
-### Heroku/Railway/Replit
+### Railway/Replit/DigitalOcean
 - Account on the platform
 - Connected GitHub repo
 
