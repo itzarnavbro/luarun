@@ -34,16 +34,22 @@ function parser.load_tasks(runner)
         rawget = rawget,
         rawset = rawset,
         error = error,
+        _G = _G,
     }
     
-    local tasks_code, err = loadfile(tasks_file, 'bt', env)
+    local tasks_code, err = loadfile(tasks_file)
     if not tasks_code then
-        tasks_code, err = loadfile(tasks_file)
-        if not tasks_code then
-            error('Error loading tasks.lua: ' .. tostring(err))
-        end
-        if setfenv then
-            setfenv(tasks_code, env)
+        error('Error loading tasks.lua: ' .. tostring(err))
+    end
+    
+    if setfenv then
+        setfenv(tasks_code, env)
+    else
+        local success, result = pcall(function()
+            return load(string.dump(tasks_code), tasks_file, 't', env)
+        end)
+        if success then
+            tasks_code = result
         end
     end
     
