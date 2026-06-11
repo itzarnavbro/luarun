@@ -50,7 +50,7 @@ local function handle_request(client, request_line, headers, body)
     local path = req.path or "/"
     
     if path == "/" then
-        local content = serve_file("ui/index.html")
+        local content = serve_file("index.html")
         if content then
             web.send_response(client, 200, { ["Content-Type"] = "text/html" }, content)
         else
