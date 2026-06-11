@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Lua
+        uses: leafo/gh-action-lua@v10
+        with:
+          luaVersion: "5.4"
+      
+      - name: Verify project structure
+        run: |
+          echo "Checking project structure..."
+          test -f main.lua && echo "✓ main.lua exists"
+          test -f tasks.lua && echo "✓ tasks.lua exists"
+          test -f server.lua && echo "✓ server.lua exists"
+          test -d core && echo "✓ core/ exists"
+          test -d ui && echo "✓ ui/ exists"
+          test -f README.md && echo "✓ README.md exists"
+      
+      - name: Syntax check (main.lua)
+        run: lua -e "local ok, err = loadfile('main.lua'); if not ok then error(err) end; print('✓ main.lua syntax OK')"
+      
+      - name: Syntax check (tasks.lua)
+        run: lua -e "local ok, err = loadfile('tasks.lua'); if not ok then error(err) end; print('✓ tasks.lua syntax OK')"
+      
+      - name: Syntax check (server.lua)
+        run: lua -e "local ok, err = loadfile('server.lua'); if not ok then error(err) end; print('✓ server.lua syntax OK')"
+      
+      - name: Check core modules
+        run: |
+          lua -e "local ok, err = loadfile('core/runner.lua'); if not ok then error(err) end; print('✓ core/runner.lua OK')"
+          lua -e "local ok, err = loadfile('core/os_utils.lua'); if not ok then error(err) end; print('✓ core/os_utils.lua OK')"
+          lua -e "local ok, err = loadfile('core/parser.lua'); if not ok then error(err) end; print('✓ core/parser.lua OK')"
+          lua -e "local ok, err = loadfile('core/web.lua'); if not ok then error(err) end; print('✓ core/web.lua OK')"
+      
+      - name: Verify HTML dashboard
+        run: |
+          test -f ui/index.html && echo "✓ ui/index.html exists"
+          grep -q "luarun" ui/index.html && echo "✓ HTML contains luarun reference"
+          grep -q "tasks" ui/index.html && echo "✓ HTML contains tasks reference"
+
+  deploy-pages:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
+      - name: Create deployment directory
+        run: |
+          mkdir -p _site
+          cp ui/index.html _site/
+          cp -r ui/ _site/assets/ || true
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: '_site'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

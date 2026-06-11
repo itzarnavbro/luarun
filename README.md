@@ -314,6 +314,36 @@ curl -X POST http://localhost:8080/api/run \
   -d '{"task":"hello"}'
 ```
 
+## Deployment
+
+### Local Docker
+
+```bash
+docker build -t luarun .
+docker run -p 8080:8080 luarun
+```
+
+### GitHub Pages
+
+The web dashboard UI is automatically deployed to GitHub Pages:
+- **URL:** `https://YOUR_USERNAME.github.io/luarun/`
+
+### Cloud Platforms
+
+Deploy to Heroku, Railway, DigitalOcean, or any Docker-compatible platform.
+
+See [DEPLOY.md](DEPLOY.md) for detailed instructions.
+
+## CI/CD Pipeline
+
+GitHub Actions automatically:
+- ✅ Validates Lua syntax
+- ✅ Checks project structure
+- ✅ Deploys to GitHub Pages
+- ✅ Builds Docker images (to GitHub Container Registry)
+
+**Check status:** https://github.com/YOUR_USERNAME/luarun/actions
+
 ## License
 
 MIT

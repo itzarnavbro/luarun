@@ -1,0 +1,11 @@
+.git
+.github
+.gitignore
+README.md
+LICENSE
+node_modules
+__pycache__
+.DS_Store
+*.swp
+*.swo
+*~
