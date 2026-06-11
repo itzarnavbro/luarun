@@ -1,12 +1,7 @@
--- runner.lua - Task registry and execution engine
-
 local runner = {}
 
--- Store registered tasks
 local tasks = {}
 
--- Register a task with name and function
--- This is exposed as global 'task()' in the tasks.lua environment
 function runner.task(name, fn)
     if type(name) ~= 'string' then
         error('Task name must be a string, got ' .. type(name))
@@ -17,8 +12,6 @@ function runner.task(name, fn)
     tasks[name] = fn
 end
 
--- Run a task by name
--- Returns (nil, error_msg) if task not found, or (result) if task executes
 function runner.run(name)
     if not tasks[name] then
         return nil, 'Task not found'
@@ -32,8 +25,6 @@ function runner.run(name)
     return true
 end
 
--- List all registered tasks
--- Returns table of task names
 function runner.list()
     local names = {}
     for name, _ in pairs(tasks) do
@@ -43,7 +34,6 @@ function runner.list()
     return names
 end
 
--- Export the task function to be used globally
 runner.task_global = function(name, fn)
     return runner.task(name, fn)
 end
