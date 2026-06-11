@@ -64,17 +64,34 @@ end)
 ### 2. Run a Task
 
 ```bash
-luajit main.lua hello
+lua main.lua hello
 # Output:
 # [luarun] Running task: hello
 # Hello, World!
 # [luarun] Done.
 ```
 
-### 3. List All Tasks
+### 3. Web Dashboard (Beautiful UI!)
+
+For an gorgeous web interface:
 
 ```bash
-luajit main.lua
+lua server.lua
+# Opens at http://localhost:8080
+```
+
+The dashboard features:
+- 🎨 Beautiful gradient UI
+- ⚡ One-click task execution
+- 📊 Live output viewing
+- 📱 Fully responsive design
+
+**Note:** The web server requires Lua's `socket` library. If not available, use the CLI.
+
+### 4. List All Tasks
+
+```bash
+lua main.lua
 # Output:
 # Available tasks:
 #   build
@@ -184,12 +201,18 @@ end)
 ```
 luarun/
 ├── main.lua              -- Entry point
+├── server.lua            -- Web dashboard server
 ├── core/
 │   ├── runner.lua        -- Task registry and execution
 │   ├── os_utils.lua      -- Cross-platform OS utilities
-│   └── parser.lua        -- Loads tasks.lua safely
+│   ├── parser.lua        -- Loads tasks.lua safely
+│   └── web.lua           -- HTTP utilities
+├── ui/
+│   ├── index.html        -- Beautiful web dashboard
+│   ├── server-simple.lua -- Task list viewer
+│   └── README.md         -- UI documentation
 ├── tasks.lua             -- Your task definitions
-└── README.md             -- This file
+└── README.md             -- Main documentation
 ```
 
 ## Examples
@@ -229,7 +252,7 @@ end)
 If a task fails, `luarun` prints the error and lists available tasks:
 
 ```bash
-$ luajit main.lua nonexistent
+$ lua main.lua nonexistent
 Error: task 'nonexistent' not found.
 
 Available tasks:
@@ -241,10 +264,54 @@ Available tasks:
 If a command within a task fails, the task stops with an error:
 
 ```bash
-$ luajit main.lua build
+$ lua main.lua build
 [luarun] Running task: build
 gcc: command not found
 Command failed: gcc -o myapp main.c
+```
+
+## Web Dashboard
+
+luarun includes a beautiful web-based dashboard for running tasks visually.
+
+### Starting the Dashboard
+
+```bash
+lua server.lua [host] [port]
+```
+
+Examples:
+```bash
+lua server.lua                    # localhost:8080
+lua server.lua 0.0.0.0 9000       # 0.0.0.0:9000
+```
+
+Then open your browser to the displayed URL.
+
+### Dashboard Features
+
+- **Task Grid** - Click any task card to run it
+- **Live Output** - See command output in real-time
+- **Status Indicators** - Visual feedback (running, success, error)
+- **Responsive Design** - Works on mobile, tablet, desktop
+- **Beautiful UI** - Purple gradient theme with smooth animations
+
+### API Endpoints
+
+The dashboard communicates with these REST endpoints:
+
+- `GET /` - Serve the dashboard HTML
+- `GET /api/tasks` - List all available tasks (JSON)
+- `POST /api/run` - Execute a task
+
+Example:
+```bash
+curl http://localhost:8080/api/tasks
+# Response: {"tasks":["hello","build","clean"]}
+
+curl -X POST http://localhost:8080/api/run \
+  -H "Content-Type: application/json" \
+  -d '{"task":"hello"}'
 ```
 
 ## License
