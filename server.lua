@@ -2,7 +2,6 @@ local socket = require("socket")
 local runner = require('core.runner')
 local parser = require('core.parser')
 local web = require('core.web')
-local lfs = require("lfs")
 
 local function serve_file(path)
     local file = io.open(path, "rb")
